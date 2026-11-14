@@ -1,10 +1,11 @@
 import os
+from io import BytesIO
 
 import httpx
 from PIL import Image
 
 
-CLIP_SERVICE_URL = os.getenv("CLIP_SERVICE_URL")
+CLIP_SERVICE_URL = os.getenv("CLIP_SERVICE_URL", "").rstrip("/")
 
 
 def create_embedding(image: Image.Image) -> list[float]:
@@ -14,11 +15,11 @@ def create_embedding(image: Image.Image) -> list[float]:
             "CLIP_SERVICE_URL is not configured"
         )
 
-    buffer = __import__("io").BytesIO()
+    buffer = BytesIO()
 
     image.save(
         buffer,
-        format="JPEG"
+        format="JPEG",
     )
 
     buffer.seek(0)
@@ -29,10 +30,10 @@ def create_embedding(image: Image.Image) -> list[float]:
             "file": (
                 "image.jpg",
                 buffer,
-                "image/jpeg"
+                "image/jpeg",
             )
         },
-        timeout=60,
+        timeout=120,
     )
 
     response.raise_for_status()
