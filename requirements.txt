@@ -7,6 +7,7 @@ sqlalchemy
 psycopg[binary]
 pgvector
 redis
+torch
 celery
 httpx
 Pillow
